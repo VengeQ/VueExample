@@ -1,10 +1,12 @@
-﻿namespace Domain.Quizes
+﻿using Domain.Quizes;
+
+namespace Domain.Services.Quizes
 {
     /// <summary>
     /// Интерфейс для работы с квизами
     /// </summary>
     public interface IQuizService
     {
-        public void GetQuiz(int id);
+        public Quiz? GetQuiz(int id);
     }
 }
