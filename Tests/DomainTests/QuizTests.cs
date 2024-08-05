@@ -10,7 +10,7 @@ namespace DomainTests
         }
 
         [Test]
-        public void Should_not_create_with_null_title()
+        public void Must_not_create_with_null_title()
         {
             var item = new QuizItem(1u, "test", new Dictionary<int, string> { [1] = "One", [2] = "Two" }, 2);
 
@@ -23,7 +23,7 @@ namespace DomainTests
         }
 
         [Test, Sequential]
-        public void Should_not_create_with_empty_title([Values("", "  ", "\t\n")] string title)
+        public void Must_not_create_with_empty_title([Values("", "  ", "\t\n")] string title)
         {
             var item = new QuizItem(1u, "test", new Dictionary<int, string> { [1] = "One", [2] = "Two" }, 2);
 
@@ -34,7 +34,7 @@ namespace DomainTests
         }
 
         [Test]
-        public void Should_not_create_with_null_items()
+        public void Must_not_create_with_null_items()
         {
 
             Assert.Throws<ArgumentNullException>(() =>
@@ -46,7 +46,7 @@ namespace DomainTests
         }
 
         [Test]
-        public void Should_not_create_with_empty_items()
+        public void Must_not_create_with_empty_items()
         {
             Assert.Throws<ArgumentException>(() =>
             {

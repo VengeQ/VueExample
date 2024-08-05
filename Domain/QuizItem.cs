@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Frozen;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Frozen;
 
 namespace Domain
 {
@@ -13,16 +8,32 @@ namespace Domain
     /// </summary>
     public class QuizItem
     {
+        /// <summary>
+        /// Идентификатор элемента
+        /// </summary>
         public uint Id { get; }
 
+        /// <summary>
+        /// Вопрос
+        /// </summary>
         public string Question { get; }
 
+        /// <summary>
+        /// Варианты ответов
+        /// </summary>
         public FrozenDictionary<int, string> AnswerOptions { get; }
 
+        /// <summary>
+        /// Номер правильного ответа
+        /// </summary>
         public int CorrectAnswerId { get; }
 
+        /// <summary>
+        /// Правильный ответ
+        /// </summary>
         public string CorrectAnswer => AnswerOptions[CorrectAnswerId];
 
+        /// <param name="id">Идентификатор элемента</param>
         /// <param name="question">Вопрос</param>
         /// <param name="answerOptions">Варианты ответов</param>
         /// <param name="correctAnswer">Правильный ответ</param>

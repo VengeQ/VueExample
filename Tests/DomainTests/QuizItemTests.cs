@@ -10,7 +10,7 @@ namespace DomainTests
         }
 
         [Test]
-        public void Should_not_create_null_QuizItem_question()
+        public void Must_not_create_null_QuizItem_question()
         {
             var answerOptions = new Dictionary<int, string>() { [1] = "First", [2] = "Second" };
 
@@ -23,7 +23,7 @@ namespace DomainTests
         }
 
         [Test, Sequential]
-        public void Should_not_create_invalid_QuizItem_question([Values("", "  ", "\t\n")] string question)
+        public void Must_not_create_invalid_QuizItem_question([Values("", "  ", "\t\n")] string question)
         {
             var answerOptions = new Dictionary<int, string>() { [1] = "First", [2] = "Second" };
 
@@ -34,7 +34,7 @@ namespace DomainTests
         }
 
         [Test]
-        public void Should_not_create_null_QuizItem_AnswerOptions()
+        public void Must_not_create_null_QuizItem_AnswerOptions()
         {
             Dictionary<int, string>? answerOptions = null;
 
@@ -47,7 +47,7 @@ namespace DomainTests
         }
 
         [Test]
-        public void Should_not_create_empty_QuizItem_AnswerOptions()
+        public void Must_not_create_empty_QuizItem_AnswerOptions()
         {
             var answerOptions = new Dictionary<int, string>();
 
@@ -58,7 +58,7 @@ namespace DomainTests
         }
 
         [Test]
-        public void Should_not_create_QuizItem_less_than_two_AnswerOptions()
+        public void Must_not_create_QuizItem_less_than_two_AnswerOptions()
         {
             var answerOptions = new Dictionary<int, string>() { [1] = "First" };
 
@@ -69,7 +69,7 @@ namespace DomainTests
         }
 
         [Test]
-        public void Should_not_create_QuizItem_with_no_correct_answer()
+        public void Must_not_create_QuizItem_with_no_correct_answer()
         {
             var answerOptions = new Dictionary<int, string>() { [1] = "First" };
 
@@ -80,7 +80,7 @@ namespace DomainTests
         }
 
         [TestCase(1u, "my Question", 3)]
-        public void Valid_QuizItem_should_create(uint id, string question, int correctAnswer)
+        public void Valid_QuizItem_Must_create(uint id, string question, int correctAnswer)
         {
             var answerOptions = new Dictionary<int, string>() { [1] = "First", [2] = "Second", [3] = "Third", [4] = "Fourth", };
 
