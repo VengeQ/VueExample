@@ -1,6 +1,6 @@
 ﻿using System.Collections.Frozen;
 
-namespace Domain
+namespace Domain.Quizes
 {
 
     /// <summary>

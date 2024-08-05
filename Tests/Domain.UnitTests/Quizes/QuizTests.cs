@@ -1,14 +1,10 @@
 ﻿using Domain;
+using Domain.Quizes;
 
-namespace DomainTests
+namespace Domain.UnitTests.Quizes
 {
     public class QuizTests
     {
-        [SetUp]
-        public void Setup()
-        {
-        }
-
         [Test]
         public void Must_not_create_with_null_title()
         {
@@ -51,6 +47,21 @@ namespace DomainTests
             Assert.Throws<ArgumentException>(() =>
             {
                 new Quiz("test", []);
+            });
+        }
+
+        [Test]
+        public void Must_not_create_with_dublicate_items()
+        {
+            var answerOptions = new Dictionary<int, string>() { [1] = "First", [2] = "Second", [3] = "Third", [4] = "Fourth", };
+            QuizItem[] quizItems = [
+                new QuizItem(1, "testQuestion1", answerOptions, 3),
+                new QuizItem(1, "testQuestion2", answerOptions, 3),
+            ];
+
+            Assert.Throws<ArgumentException>(() =>
+            {
+                new Quiz("test", quizItems);
             });
         }
 

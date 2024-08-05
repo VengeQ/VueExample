@@ -1,4 +1,4 @@
-﻿namespace Domain
+﻿namespace Domain.Quizes
 {
     /// <summary>
     /// Интерфейс для работы с квизами

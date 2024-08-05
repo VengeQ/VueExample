@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain
+namespace Domain.Quizes
 {
     /// <summary>
     /// Викторина
@@ -19,6 +19,11 @@ namespace Domain
             if (!items.Any())
             {
                 throw new ArgumentException(null, nameof(items));
+            }
+
+            if (items.Select(i => i.Id).Distinct().Count() != items.Count())
+            {
+                throw new ArgumentException("Quiz items should contains unique id", nameof(items));
             }
 
             Title = title;

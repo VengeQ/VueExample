@@ -1,14 +1,10 @@
 using Domain;
+using Domain.Quizes;
 
-namespace DomainTests
+namespace Domain.UnitTests.Quizes
 {
     public class QuizItemTests
     {
-        [SetUp]
-        public void Setup()
-        {
-        }
-
         [Test]
         public void Must_not_create_null_QuizItem_question()
         {

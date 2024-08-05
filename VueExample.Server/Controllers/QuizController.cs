@@ -1,4 +1,4 @@
-﻿using Domain;
+﻿using Domain.Quizes;
 using Microsoft.AspNetCore.Mvc;
 
 namespace VueExample.Server.Controllers
