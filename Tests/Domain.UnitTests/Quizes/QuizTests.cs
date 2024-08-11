@@ -13,7 +13,7 @@ namespace Domain.UnitTests.Quizes
             Assert.Throws<ArgumentNullException>(() =>
             {
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
-                new Quiz(null, [item]);
+                new Quiz(1, null, [item]);
 #pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
             });
         }
@@ -25,7 +25,7 @@ namespace Domain.UnitTests.Quizes
 
             Assert.Throws<ArgumentException>(() =>
             {
-                new Quiz(title, [item]);
+                new Quiz(1, title, [item]);
             });
         }
 
@@ -36,7 +36,7 @@ namespace Domain.UnitTests.Quizes
             Assert.Throws<ArgumentNullException>(() =>
             {
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
-                new Quiz("test", null);
+                new Quiz(1, "test", null);
 #pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
             });
         }
@@ -46,7 +46,7 @@ namespace Domain.UnitTests.Quizes
         {
             Assert.Throws<ArgumentException>(() =>
             {
-                new Quiz("test", []);
+                new Quiz(1, "test", []);
             });
         }
 
@@ -61,7 +61,7 @@ namespace Domain.UnitTests.Quizes
 
             Assert.Throws<ArgumentException>(() =>
             {
-                new Quiz("test", quizItems);
+                new Quiz(1, "test", quizItems);
             });
         }
 
@@ -71,7 +71,7 @@ namespace Domain.UnitTests.Quizes
             var item = new QuizItem(1u, "test", new Dictionary<int, string> { [1] = "One", [2] = "Two" }, 2);
             var title = "test";
 
-            var quiz = new Quiz(title, [item]);
+            var quiz = new Quiz(1, title, [item]);
 
             Assert.Multiple(() =>
             {

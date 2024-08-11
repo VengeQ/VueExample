@@ -5,6 +5,11 @@
     /// </summary>
     public class QuizState
     {
+        /// <summary>
+        /// Запуск викторины с новым состоянием
+        /// </summary>
+        /// <param name="id">Идентификатор создаваемого викторин с состоянием</param>
+        /// <param name="quiz">Викторина</param>
         public QuizState(Guid id, Quiz quiz)
         {
             Id = id;
@@ -14,16 +19,33 @@
             CurrentQuestion = 0;
         }
 
-        public QuizState(Guid id, Quiz quiz, bool isDone, IDictionary<int, int> givenAnswers, int currentQuestion) : this(id, quiz)
+        private QuizState(Guid id, Quiz quiz, IDictionary<int, int> givenAnswers, int currentQuestion) : this(id, quiz)
         {
+            if (givenAnswers.Count >= quiz.QuizLength)
+            {
+                throw new InvalidOperationException("Given answer count should be less than quiz length");
+            }
+
             if (currentQuestion != givenAnswers.Count)
             {
                 throw new InvalidOperationException("Current question should be equal to given answer counter");
             }
 
-            IsDone = isDone;
-            _givenAnswers = givenAnswers;
+            IsDone = false;
+            _givenAnswers = givenAnswers.ToDictionary();
             CurrentQuestion = currentQuestion;
+        }
+
+        /// <summary>
+        /// Продолжить викторину
+        /// </summary>
+        /// <param name="id">Идентификатор викторины</param>
+        /// <param name="quiz">Викторина</param>
+        /// <param name="givenAnswers">Данные уже ответы</param>
+        /// <param name="currentQuestion">текущий вопрос</param>
+        public static QuizState ResumeQuiz(Guid id, Quiz quiz, IDictionary<int, int> givenAnswers, int currentQuestion)
+        {
+            return new QuizState(id, quiz, givenAnswers, currentQuestion);
         }
 
         /// <summary>

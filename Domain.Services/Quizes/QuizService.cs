@@ -16,7 +16,7 @@ namespace Domain.Services.Quizes
             var item3 = new QuizItem(3u, "test", new Dictionary<int, string> { [1] = "One", [2] = "Two" }, 2);
             var title = "test";
             
-            return new Quiz(title, [item1, item2, item3]);
+            return new Quiz(1, title, [item1, item2, item3]);
         }
     }
 }

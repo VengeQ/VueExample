@@ -7,6 +7,11 @@ namespace Domain.Services.Quizes
     /// </summary>
     public interface IQuizService
     {
+        /// <summary>
+        /// Получить викторину
+        /// </summary>
+        /// <param name="id">Идентификатор викторины</param>
+        /// <returns>Викторина</returns>
         public Quiz? GetQuiz(int id);
     }
 }

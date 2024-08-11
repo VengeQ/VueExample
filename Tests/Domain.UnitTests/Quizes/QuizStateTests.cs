@@ -9,7 +9,7 @@ namespace Domain.UnitTests.Quizes
         {
             var answerOptions = new Dictionary<int, string>() { [1] = "First", [2] = "Second", [3] = "Third", [4] = "Fourth", };
             QuizItem[] quizItems = [new QuizItem(1, "testQuestion", answerOptions, 3)];
-            var quiz = new Quiz("test", quizItems)!;
+            var quiz = new Quiz(1, "test", quizItems)!;
 
             var state = new QuizState(Guid.Empty, quiz);
 
@@ -30,13 +30,29 @@ namespace Domain.UnitTests.Quizes
                 new QuizItem(2, "testQuestion2", answerOptions, 1),
                 new QuizItem(3, "testQuestion3", answerOptions, 2),
             ];
-            var quiz = new Quiz("test", quizItems)!;
+            var quiz = new Quiz(1, "test", quizItems)!;
 
             Assert.Throws<InvalidOperationException>(() =>
             {
-                new QuizState(Guid.Empty, quiz, false, new Dictionary<int, int>() { [1] = 2 }, 2);
+                QuizState.ResumeQuiz(Guid.Empty, quiz, new Dictionary<int, int>() { [1] = 2 }, 2);
             });
         }
+
+        [Test]
+        public void Must_not_resume_invalid_QuizState_2()
+        {
+            var answerOptions = new Dictionary<int, string>() { [1] = "First", [2] = "Second", [3] = "Third", [4] = "Fourth", };
+            QuizItem[] quizItems = [
+                new QuizItem(1, "testQuestion1", answerOptions, 3)
+            ];
+            var quiz = new Quiz(1, "test", quizItems)!;
+
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                QuizState.ResumeQuiz(Guid.Empty, quiz, new Dictionary<int, int>() { [1] = 2, [2] = 3 }, 2);
+            });
+        }
+
 
         [Test]
         public void Must_resume_valid_QuizState()
@@ -46,9 +62,9 @@ namespace Domain.UnitTests.Quizes
                 new QuizItem(1, "testQuestion1", answerOptions, 3),
                 new QuizItem(2, "testQuestion2", answerOptions, 1),
             ];
-            var quiz = new Quiz("test", quizItems)!;
+            var quiz = new Quiz(1, "test", quizItems)!;
 
-            var state = new QuizState(Guid.Empty, quiz, false, new Dictionary<int, int>() { [1] = 2 }, 1);
+            var state = QuizState.ResumeQuiz(Guid.Empty, quiz, new Dictionary<int, int>() { [1] = 2 }, 1);
 
             Assert.Multiple(() =>
             {

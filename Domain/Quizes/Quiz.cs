@@ -11,7 +11,9 @@ namespace Domain.Quizes
     /// </summary>
     public class Quiz
     {
-        public Quiz(string title, IEnumerable<QuizItem> items)
+        public int Id { get; }
+
+        public Quiz(int id, string title, IEnumerable<QuizItem> items)
         {
             ArgumentException.ThrowIfNullOrWhiteSpace(title);
             ArgumentNullException.ThrowIfNull(items);
@@ -26,6 +28,7 @@ namespace Domain.Quizes
                 throw new ArgumentException("Quiz items should contains unique id", nameof(items));
             }
 
+            Id = id;
             Title = title;
             Items = items.ToList();
         }
