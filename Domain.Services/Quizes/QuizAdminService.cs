@@ -3,8 +3,12 @@ using System.Collections.Frozen;
 
 namespace Domain.Services.Quizes
 {
-    public class QuizAdmiService : IQuizAdminService
+    public class QuizAdminService : IQuizAdminService
     {
+        private readonly IQuizRepository _quizRepository; 
+
+        public QuizAdminService(IQuizRepository quizRepository) { _quizRepository = quizRepository; }
+
         public Task Add(Quiz quiz)
         {
             throw new NotImplementedException();
@@ -23,6 +27,11 @@ namespace Domain.Services.Quizes
         public Task<Quiz?> Get(int id)
         {
             throw new NotImplementedException();
+        }
+
+        public Task<string> GetVersion()
+        {
+            return _quizRepository.GetVersion();
         }
     }
 }

@@ -5,16 +5,22 @@ namespace Domain.Repository
 {
     public class QuizContext : DbContext
     {
-        public DbSet<Quiz> Quizes { get; set; }
+        //public DbSet<Quiz> Quizes { get; set; }
 
-        public DbSet<QuizItem> QuizItems { get; set; }
+        //public DbSet<QuizItem> QuizItems { get; set; }
 
-        public DbSet<QuizState> QuizStates { get; set; }
+        //public DbSet<QuizState> QuizStates { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseNpgsql(
-                @"Host=my_host;Database=my_db;Username=my_user;Password=my_pw");
+                @"Host=host.docker.internal;Port=5455;Database=postgres;Username=postgres;Password=postgresPW");
+        }
+
+        public string GetVersion()
+        {
+            var t = Database.SqlQueryRaw<string>($"SELECT VERSION()").AsEnumerable().First();
+            return t.ToString();
         }
     }
 

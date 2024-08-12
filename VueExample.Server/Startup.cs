@@ -1,4 +1,6 @@
-﻿using Domain.Services.Quizes;
+﻿using Domain.Repository;
+using Domain.Repository.Quizes;
+using Domain.Services.Quizes;
 
 namespace VueExample.Server
 {
@@ -10,6 +12,9 @@ namespace VueExample.Server
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
             services.AddTransient<IQuizService, QuizService>();
+            services.AddTransient<IQuizAdminService, QuizAdminService>();
+            services.AddTransient<IQuizRepository, QuizRepository>();
+            services.AddTransient<QuizContext>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

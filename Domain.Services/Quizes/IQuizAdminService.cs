@@ -13,6 +13,8 @@ namespace Domain.Services.Quizes
     /// </summary>
     public interface IQuizAdminService
     {
+        public Task<string> GetVersion();
+
         /// <summary>
         /// Добавить викторину
         /// </summary>
