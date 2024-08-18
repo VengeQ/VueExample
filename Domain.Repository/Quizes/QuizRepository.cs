@@ -1,9 +1,5 @@
-﻿using Domain.Services.Quizes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Domain.Quizes;
+using Domain.Services.Quizes;
 
 namespace Domain.Repository.Quizes
 {
@@ -12,9 +8,31 @@ namespace Domain.Repository.Quizes
         private readonly QuizContext _quizContext;
         public QuizRepository(QuizContext quizContext) { _quizContext = quizContext; }
 
-        public Domain.Quizes.Quiz Get(int id)
+        public async Task<Quiz?> Get(int id)
         {
-            throw new NotImplementedException();
+            var quizDto = await _quizContext.GetQuiz(id);
+            if (quizDto == null)
+            {
+                return null;
+            }
+
+            var items = quizDto.QuizItemDtos.Select(item => new QuizItem(
+                item.QuizDtoId, 
+                item.Question,
+                ConvertAnswerOptions(item.AnswerOptions), 
+                item.CorrectAnswerId)
+            );
+            return new Quiz(quizDto.QuizDtoId, quizDto.Title, items);
+        }
+
+        private static SortedDictionary<int, string> ConvertAnswerOptions(IEnumerable<AnswerOptionDto> answerOptions)
+        {
+            var dictionary = new SortedDictionary<int, string>();
+            foreach (var answerOptionDto in answerOptions)
+            {
+                dictionary[answerOptionDto.Id] = answerOptionDto.Answer;
+            }
+            return dictionary;
         }
 
         public Task<string> GetVersion()

@@ -12,6 +12,6 @@ namespace Domain.Services.Quizes
         /// </summary>
         /// <param name="id">Идентификатор викторины</param>
         /// <returns>Викторина</returns>
-        public Quiz? GetQuiz(int id);
+        public Task<Quiz?> GetQuiz(int id);
     }
 }

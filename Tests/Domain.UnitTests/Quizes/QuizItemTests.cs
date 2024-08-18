@@ -75,8 +75,8 @@ namespace Domain.UnitTests.Quizes
             });
         }
 
-        [TestCase(1u, "my Question", 3)]
-        public void Valid_QuizItem_Must_create(uint id, string question, int correctAnswer)
+        [TestCase(1, "my Question", 3)]
+        public void Valid_QuizItem_Must_create(int id, string question, int correctAnswer)
         {
             var answerOptions = new Dictionary<int, string>() { [1] = "First", [2] = "Second", [3] = "Third", [4] = "Fourth", };
 

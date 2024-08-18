@@ -1,6 +1,7 @@
 ﻿using Domain.Repository;
 using Domain.Repository.Quizes;
 using Domain.Services.Quizes;
+using Microsoft.EntityFrameworkCore;
 
 namespace VueExample.Server
 {
@@ -42,6 +43,11 @@ namespace VueExample.Server
                 
                 app.MapFallbackToFile("/index.html");
             });
+
+            using var scope =app.ApplicationServices.CreateScope();
+            using var context = scope.ServiceProvider.GetRequiredService<QuizContext>();
+            context.Database.EnsureDeleted();
+            context.Database.EnsureCreated();
 
             //app.Run();
         }

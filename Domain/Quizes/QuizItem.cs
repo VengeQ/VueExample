@@ -11,7 +11,7 @@ namespace Domain.Quizes
         /// <summary>
         /// Идентификатор элемента
         /// </summary>
-        public uint Id { get; }
+        public int Id { get; }
 
         /// <summary>
         /// Вопрос
@@ -37,7 +37,7 @@ namespace Domain.Quizes
         /// <param name="question">Вопрос</param>
         /// <param name="answerOptions">Варианты ответов</param>
         /// <param name="correctAnswer">Правильный ответ</param>
-        public QuizItem(uint id, string question, IDictionary<int, string> answerOptions, int correctAnswer)
+        public QuizItem(int id, string question, IDictionary<int, string> answerOptions, int correctAnswer)
         {
             ArgumentException.ThrowIfNullOrWhiteSpace(question);
             ArgumentNullException.ThrowIfNull(answerOptions);

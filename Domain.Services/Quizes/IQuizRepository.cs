@@ -7,7 +7,7 @@ namespace Domain.Services.Quizes
     /// </summary>
     public interface IQuizRepository
     {
-        public Quiz Get(int id);
+        public Task<Quiz?> Get(int id);
 
         public Task<string> GetVersion();
     }

@@ -8,7 +8,7 @@ namespace Domain.UnitTests.Quizes
         [Test]
         public void Must_not_create_with_null_title()
         {
-            var item = new QuizItem(1u, "test", new Dictionary<int, string> { [1] = "One", [2] = "Two" }, 2);
+            var item = new QuizItem(1, "test", new Dictionary<int, string> { [1] = "One", [2] = "Two" }, 2);
 
             Assert.Throws<ArgumentNullException>(() =>
             {
@@ -21,7 +21,7 @@ namespace Domain.UnitTests.Quizes
         [Test, Sequential]
         public void Must_not_create_with_empty_title([Values("", "  ", "\t\n")] string title)
         {
-            var item = new QuizItem(1u, "test", new Dictionary<int, string> { [1] = "One", [2] = "Two" }, 2);
+            var item = new QuizItem(1, "test", new Dictionary<int, string> { [1] = "One", [2] = "Two" }, 2);
 
             Assert.Throws<ArgumentException>(() =>
             {
@@ -68,7 +68,7 @@ namespace Domain.UnitTests.Quizes
         [Test]
         public void Valid_Quiz_Must_Create()
         {
-            var item = new QuizItem(1u, "test", new Dictionary<int, string> { [1] = "One", [2] = "Two" }, 2);
+            var item = new QuizItem(1, "test", new Dictionary<int, string> { [1] = "One", [2] = "Two" }, 2);
             var title = "test";
 
             var quiz = new Quiz(1, title, [item]);

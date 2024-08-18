@@ -20,12 +20,12 @@ namespace VueExample.Server.Controllers
         [HttpGet("{id:int}", Name = "GetQuizes")]
         public async Task<IActionResult> GetQuiz(int id)
         {
-            if (id < 0)
+            if (id <= 0)
             {
                 return BadRequest();
             }
 
-            var quiz = _quizService.GetQuiz(id);
+            var quiz = await _quizService.GetQuiz(id);
 
             if (quiz == null)
             {
