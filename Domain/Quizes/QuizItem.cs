@@ -1,4 +1,5 @@
 ﻿using System.Collections.Frozen;
+using System.Text.Json.Serialization;
 
 namespace Domain.Quizes
 {
@@ -8,25 +9,28 @@ namespace Domain.Quizes
     /// </summary>
     public class QuizItem
     {
+        [JsonConstructor]
+        public QuizItem() { }
+
         /// <summary>
         /// Идентификатор элемента
         /// </summary>
-        public int Id { get; }
+        public int Id { get; init; }
 
         /// <summary>
         /// Вопрос
         /// </summary>
-        public string Question { get; }
+        public string Question { get; init; } = null!;
 
         /// <summary>
         /// Варианты ответов
         /// </summary>
-        public FrozenDictionary<int, string> AnswerOptions { get; }
+        public IReadOnlyDictionary<int, string> AnswerOptions { get; init; } = null!;
 
         /// <summary>
         /// Номер правильного ответа
         /// </summary>
-        public int CorrectAnswerId { get; }
+        public int CorrectAnswerId { get; init; }
 
         /// <summary>
         /// Правильный ответ

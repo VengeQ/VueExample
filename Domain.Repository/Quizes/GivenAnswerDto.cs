@@ -7,6 +7,7 @@ namespace Domain.Repository.Quizes
         [Key]
         public int QuestionId { get; set; }
 
+        [Required]
         public int AnswerId { get; set; }
     }
 }

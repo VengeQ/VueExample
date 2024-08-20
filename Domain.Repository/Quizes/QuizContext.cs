@@ -1,14 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Reflection.Metadata;
+using Microsoft.Extensions.Options;
 
 namespace Domain.Repository.Quizes
 {
     public class QuizContext : DbContext
     {
-        public QuizContext()
+        public QuizContext(IOptions<QuizContextOptions> contextOptions)
         {
+            _connectionString = contextOptions.Value.ConnectionString;
         }
+
+        private readonly string _connectionString;
 
         public DbSet<QuizDto> Quizes { get; set; }
 
@@ -23,35 +26,16 @@ namespace Domain.Repository.Quizes
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseNpgsql(
-                @"Host=host.docker.internal;Port=5455;Database=quizes;Username=postgres;Password=postgresPW")
+                 //@"Host=host.docker.internal;Port=5455;Database=quizes;Username=postgres;Password=postgresPW")
+                 //@"Host=localhost;Port=5455;Database=quizes;Username=postgres;Password=postgresPW")
+                 _connectionString)
                 .LogTo(Console.WriteLine, LogLevel.Information)
                 .EnableSensitiveDataLogging();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
-
-            //modelBuilder.Entity<QuizItemDto>()
-            //    .HasMany(item => item.AnswerOptions)
-            //    .WithOne()
-            //    .HasForeignKey(quiz => quiz.Id)
-            //    .IsRequired(false);
-
-            //modelBuilder.Entity<QuizDto>()
-            //    .HasMany(quiz => quiz.Items)
-            //    .WithOne()
-            //    .HasForeignKey(item => item.Id)
-            //    .IsRequired(false);
-
-            //AnswerOptionDto[] answerOptions = [
-            //    new AnswerOptionDto() { Id = 1, Answer = "1992" QuizItemDtoId = 1},
-            //    //new AnswerOptionDto() { Id = 2, Answer = "1991", QuizItemDto = quizItem, QuizItemDtoId = 1 },
-            //    //new AnswerOptionDto() { Id = 3, Answer = "1994", QuizItemDto = quizItem, QuizItemDtoId = 1 },
-            //    //new AnswerOptionDto() { Id = 4, Answer = "1995", QuizItemDto = quizItem, QuizItemDtoId = 1 }
-            //];
-
-            modelBuilder.Entity<QuizDto>().HasData(new QuizDto { QuizDtoId = 1, Title = "Первая викторина" });
+            modelBuilder.Entity<QuizDto>().HasData(new QuizDto { Id = 1, Title = "Первая викторина" });
 
             modelBuilder.Entity<QuizItemDto>(
                 entity =>
@@ -65,7 +49,7 @@ namespace Domain.Repository.Quizes
             modelBuilder.Entity<QuizItemDto>().HasData(
                 new QuizItemDto()
                 {
-                    QuizItemDtoId = 1,
+                    Id = 1,
                     CorrectAnswerId = 2,
                     Question = "Когда я родился",
                     QuizDtoId = 1,
@@ -100,14 +84,14 @@ namespace Domain.Repository.Quizes
 
         internal async Task<QuizDto?> GetQuiz(int id)
         {
-            var quiz = await Quizes.FirstOrDefaultAsync(q => q.QuizDtoId == id);
+            var quiz = await Quizes.FirstOrDefaultAsync(q => q.Id == id);
 
             if (quiz == null)
             {
                 return null;
             }
 
-            return await Quizes.Include(q => q.QuizItemDtos).ThenInclude(a => a.AnswerOptions).FirstAsync(q => q.QuizDtoId == id);
+            return await Quizes.Include(q => q.QuizItemDtos).ThenInclude(a => a.AnswerOptions).FirstAsync(q => q.Id == id);
         }
     }
 }

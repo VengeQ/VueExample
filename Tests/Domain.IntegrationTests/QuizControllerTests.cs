@@ -1,17 +1,11 @@
 ﻿using Domain.Quizes;
 using Domain.Repository.Quizes;
-using Domain.Services.Quizes;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net.Http.Json;
+using System.Text.Json;
 using VueExample.Server;
 using VueExample.Server.Controllers;
 
@@ -23,34 +17,40 @@ namespace Domain.IntegrationTests
         ILogger<QuizesController> _logger = new DummyLogger<QuizesController>();
         WebApplicationFactory<Startup> _factory;
         HttpClient _httpClient;
+        JsonSerializerOptions _jsonSerializerOptions;
 
         [SetUp]
         public void SetUp()
-        {
-            _logger = new DummyLogger<QuizesController>();
-            _factory = new WebApplicationFactory<Startup>().WithWebHostBuilder(builder =>
-            {
-                builder.ConfigureTestServices(services =>
-                {
-                    //
-                });
-            });
-            using (var _scope = _factory.Services.CreateScope())
-            {
-                var context = _scope.ServiceProvider.GetRequiredService<QuizContext>();
-                context.Database.EnsureDeleted();
-                context.Database.EnsureCreated();
-            }
-
-
+        {       
             _httpClient = _factory.CreateClient();
+        }
+
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
+        {
+            _jsonSerializerOptions = new(JsonSerializerDefaults.Web);
+            _logger = new DummyLogger<QuizesController>();
+            _factory = new QuizesTestFactory<Startup>();
+            using var _scope = _factory.Services.CreateScope();
+            var quizContext = _scope.ServiceProvider.GetRequiredService<QuizContext>();
+            quizContext.Database.EnsureDeleted();
+            quizContext.Database.EnsureCreated();
+        }
+
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            using var _scope = _factory.Services.CreateScope();
+            var quizContext = _scope.ServiceProvider.GetRequiredService<QuizContext>();
+            quizContext.Database.EnsureDeleted();
+            quizContext.Dispose();
+            _factory?.Dispose();
         }
 
         [TearDown]
         public void TearDown()
         {
-            _httpClient?.Dispose();
-            _factory?.Dispose();
+            _httpClient?.Dispose();      
         }
 
         [Test]
@@ -76,7 +76,13 @@ namespace Domain.IntegrationTests
         {
             var response = await _httpClient.GetAsync(new Uri("api/Quizes/1", UriKind.Relative));
 
-            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+            var result = await response.Content.ReadFromJsonAsync<Quiz>(_jsonSerializerOptions);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+                Assert.That(result!.Id, Is.EqualTo(1));
+            });
         }
     }
 }

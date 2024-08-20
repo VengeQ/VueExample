@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
 
 namespace Domain.Quizes
 {
@@ -11,7 +7,10 @@ namespace Domain.Quizes
     /// </summary>
     public class Quiz
     {
-        public int Id { get; }
+        [JsonConstructor]
+        public Quiz() { }
+
+        public int Id { get; init; }
 
         public Quiz(int id, string title, IEnumerable<QuizItem> items)
         {
@@ -36,12 +35,12 @@ namespace Domain.Quizes
         /// <summary>
         /// Наименование
         /// </summary>
-        public string Title { get; }
+        public string Title { get; init; } = null!;
 
         /// <summary>
         /// Элементы викторины
         /// </summary>
-        public IReadOnlyList<QuizItem> Items { get; }
+        public IReadOnlyList<QuizItem> Items { get; init; } = null!;
 
         /// <summary>
         /// Количество элементов

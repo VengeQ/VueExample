@@ -2,6 +2,7 @@
 
 namespace Domain.Services.Quizes
 {
+    /// <inheritdoc/>
     public class QuizService : IQuizService
     {
         private readonly IQuizRepository _quizRepository;
