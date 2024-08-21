@@ -3,12 +3,19 @@ using Domain.Repository.Quizes;
 using Domain.Services.Quizes;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 
 namespace VueExample.Server;
 
-    public class Startup
+public class Startup
 {
+    public Startup(IConfiguration configuration)
+    {
+        Configuration = configuration;
+    }
+
+    public IConfiguration Configuration { get; }
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddControllers();
@@ -18,11 +25,19 @@ namespace VueExample.Server;
         services.AddTransient<IQuizAdminService, QuizAdminService>();
         services.AddTransient<IQuizRepository, QuizRepository>();
 
-        IOptions<QuizContextOptions> contextOptions = Options.Create(new QuizContextOptions
-        {
-            ConnectionString = @"Host=localhost;Port=5455;Database=quizes;Username=postgres;Password=postgresPW",
-        });
-        services.AddSingleton(contextOptions);
+        //services.AddOptions<QuizContextOptions>()
+        //    .Bind(Configuration.GetSection("QuizContextOptions"));
+
+
+        services.Configure<QuizContextOptions>(
+            Configuration.GetSection("QuizContextOptions")
+        );
+
+        //IOptions<QuizContextOptions> contextOptions = Options.Create(new QuizContextOptions
+        //{
+        //    ConnectionString = @"Host=localhost;Port=5455;Database=quizes;Username=postgres;Password=postgresPW",
+        //});
+        //services.AddSingleton(contextOptions);
 
         services.AddTransient<QuizContext>();
     }
@@ -53,11 +68,6 @@ namespace VueExample.Server;
 
             app.MapFallbackToFile("/index.html");
         });
-
-        using var scope = app.ApplicationServices.CreateScope();
-        using var context = scope.ServiceProvider.GetRequiredService<QuizContext>();
-        context.Database.EnsureDeleted();
-        context.Database.EnsureCreated();
     }
 }
 

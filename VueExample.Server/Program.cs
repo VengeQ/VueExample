@@ -53,11 +53,5 @@ namespace VueExample.Server
                 {
                     webBuilder.UseStartup<Startup>(); 
                 });
-
-
-        public static void ConfigureServices(WebApplicationBuilder builder)
-        {
-            builder.Services.AddTransient<IQuizService, QuizService>();
-        }
     }
 }
