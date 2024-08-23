@@ -3,4 +3,7 @@
 GET {{VueExample.Server_HostAddress}}/weatherforecast/
 Accept: application/json
 
+# POST {{VueExample.Server_HostAddress}}/api/authenticate/
+# Accept: application/json
+
 ###

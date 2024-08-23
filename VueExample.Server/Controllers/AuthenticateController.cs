@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace VueExample.Server.Controllers
 {
@@ -7,5 +6,18 @@ namespace VueExample.Server.Controllers
     [ApiController]
     public class AuthenticateController : ControllerBase
     {
+        public AuthenticateController() { }
+
+        [HttpPost(Name = "Autorize")]
+        public async Task<IActionResult> Autorize(User user)
+        {
+            return Ok(new { Id = 1, Token = "testtoken"});
+        }
+
+        public class User
+        {
+            public string Username { get; set; }
+            public string Password { get; set; }
+        }
     }
 }
