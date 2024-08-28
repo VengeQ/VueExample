@@ -24,9 +24,6 @@ export const useAuthStore = defineStore({
                 body: JSON.stringify({ username, password })
             }).then(r => r.json());
 
-
-            //const user = await fetchWrapper.post('https://localhost:7020/api/Authenticate/Autorize/', { username, password });
-
             // update pinia state
             this.user = user;
 

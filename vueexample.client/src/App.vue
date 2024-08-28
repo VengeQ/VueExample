@@ -1,23 +1,37 @@
 <script setup>
 import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
-import Login from './components/Login.vue'
+import { RouterLink, RouterView } from 'vue-router';
+
+import { useAuthStore } from '@/stores/auth-store.js';    
+
+
+const authStore = useAuthStore();
 </script>
 
-<template>
+<!--<template>
   <header>
     <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
 
     <div class="wrapper">
       <HelloWorld msg="You did it!" />
     </div>
-  </header>
+  </header>-->
 
-  <main>
-    <TheWelcome />
-  </main>
+    <!--<Login></Login>-->
+<!--</template>-->
 
-    <Login></Login>
+<template>
+    <div class="app-container bg-light">
+        <nav v-show="authStore.user" class="navbar navbar-expand navbar-dark bg-dark">
+            <div class="navbar-nav">
+                <RouterLink to="/" class="nav-item nav-link">Home</RouterLink>
+                <a @click="authStore.logout()" class="nav-item nav-link">Logout</a>
+            </div>
+        </nav>
+        <div class="container pt-4 pb-4">
+            <RouterView />
+        </div>
+    </div>
 </template>
 
 <style scoped>
