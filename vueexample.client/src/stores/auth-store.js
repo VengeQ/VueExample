@@ -13,9 +13,7 @@ export const useAuthStore = defineStore({
     actions: {
         async login(username, password) {
 
-            var x = await fetch('weatherforecast')
-
-            var user = await fetch('api/authenticate', {
+            let user = await fetch('api/authenticate', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json;charset=utf-8',

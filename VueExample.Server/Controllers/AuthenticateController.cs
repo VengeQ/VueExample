@@ -9,12 +9,12 @@ namespace VueExample.Server.Controllers
         public AuthenticateController() { }
 
         [HttpPost(Name = "Autorize")]
-        public async Task<IActionResult> Autorize(User user)
+        public async Task<IActionResult> Autorize(UserCredentials user)
         {
             return Ok(new { Id = 1, Token = "testtoken"});
         }
 
-        public class User
+        public class UserCredentials
         {
             public string Username { get; set; }
             public string Password { get; set; }

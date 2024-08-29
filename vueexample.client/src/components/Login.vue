@@ -15,18 +15,8 @@ function onSubmit(values, { setErrors }) {
         .catch(error => setErrors({ apiError: error }));
 }
 
-function validateName(value) {
-    // if the field is empty
-    if (!value) {
-        return 'This field is required';
-    }
-
-    if (value.length < 5){
-        return 'to short';
-    }
-    // All is good
-    return true;
-}
+const validateName = value => !!value ? true : 'This field is required';
+const validatePassword = value => !!value ? true : 'This field is required';
 
 </script>
 
@@ -37,45 +27,24 @@ function validateName(value) {
             Password: test
         </div>
         <h2>Login</h2>
-        <!--<Form @submit="onSubmit" :validation-schema="schema" v-slot="{ errors, isSubmitting }">
-        <div class="form-group">
-            <label>Username</label>
-            <Field name="username" type="text" class="form-control" :class="{ 'is-invalid': errors.username }" />
-            <div class="invalid-feedback">{{errors.username}}</div>
-        </div>
-        <div class="form-group">
-            <label>Password</label>
-            <Field name="password" type="password" class="form-control" :class="{ 'is-invalid': errors.password }" />
-            <div class="invalid-feedback">{{errors.password}}</div>
-        </div>
-        <div class="form-group">
-            <button class="btn btn-primary" :disabled="isSubmitting">
-                <span v-show="isSubmitting" class="spinner-border spinner-border-sm mr-1"></span>
-                Login
-            </button>
-        </div>
-        <div v-if="errors.apiError" class="alert alert-danger mt-3 mb-0">{{errors.apiError}}</div>
-    </Form>-->
         <Form @submit="onSubmit">
             <div class="form-group">
                 <label>Username</label>
-                <!--<Field name="username" type="text" class="form-control" :rules="validateName" />
-    <ErrorMessage class="warning" name="username" />
-    <span>{{ errorMessage }}</span>-->
                 <Field name="username" :rules="validateName" v-slot="{ field, errors, errorMessage }">
-                    <input v-bind="field" type="text" class="form-control"/>
-
-                    <span>{{ errorMessage }}</span>
+                    <input v-bind="field" type="text" class="form-control" />
+                    <span class="badge text-bg-warning">{{ errorMessage }}</span>
                 </Field>
-
             </div>
             <div class="form-group">
                 <label>Password</label>
-                <Field name="password" type="password" class="form-control" />
+                <Field name="password" :rules="validatePassword" v-slot="{ field, errors, errorMessage }">
+                    <input v-bind="field" type="text" class="form-control" />
+                    <span class="badge text-bg-warning">{{ errorMessage }}</span>
+                </Field>
             </div>
             <div class="form-group">
                 <button class="btn btn-primary">
-                    <span v-show="true" class="spinner-border spinner-border-sm mr-1"></span>
+                    <!--<span v-show="true" class="spinner-border spinner-border-sm mr-1"></span>-->
                     Login
                 </button>
             </div>
