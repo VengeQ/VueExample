@@ -1,10 +1,8 @@
-﻿using Domain.Repository;
-using Domain.Repository.Quizes;
+﻿using Domain.Repository.Quizes;
 using Domain.Services.Quizes;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace VueExample.Server;
 
@@ -21,6 +19,23 @@ public class Startup
         services.AddControllers();
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
+
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(o =>
+        {
+            o.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidIssuer = "issuer",
+                ValidAudience = "audience",
+                IssuerSigningKey = new SymmetricSecurityKey
+                (Encoding.UTF8.GetBytes("VERY_SECRET_BEATIFUL_KEY_ISJAFWJAFJ")),
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true
+            };
+        });
+        services.AddAuthorization();            // добавление сервисов авторизации
+
         services.AddTransient<IQuizService, QuizService>();
         services.AddTransient<IQuizAdminService, QuizAdminService>();
         services.AddTransient<IQuizRepository, QuizRepository>();
@@ -59,7 +74,8 @@ public class Startup
 
         app.UseRouting();
 
-        //app.UseAuthorization();
+        app.UseAuthentication();   // добавление middleware аутентификации 
+        app.UseAuthorization();   // добавление middleware авторизации 
 
         app.UseEndpoints(app =>
         {

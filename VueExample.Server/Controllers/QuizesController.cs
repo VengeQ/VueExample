@@ -1,4 +1,5 @@
 ﻿using Domain.Services.Quizes;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace VueExample.Server.Controllers
@@ -18,6 +19,7 @@ namespace VueExample.Server.Controllers
         }
 
         [HttpGet("{id:int}", Name = "GetQuizes")]
+        [Authorize]
         public async Task<IActionResult> GetQuiz(int id)
         {
             if (id <= 0)

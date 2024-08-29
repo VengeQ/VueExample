@@ -24,13 +24,15 @@
 
 <script lang="js">
     import { defineComponent } from 'vue';
+    import { useAuthStore } from '../stores/auth-store.js';
 
     export default defineComponent({
         data() {
             return {
                 loading: false,
                 quiz: null,
-                question: null
+                question: null,
+                authStore: useAuthStore()
             };
         },
         created() {
@@ -47,7 +49,12 @@
                 this.quiz = null;
                 this.loading = true;
 
-                fetch('api/quizes/1')
+                fetch('api/quizes/1', {
+                    headers: {
+                        "Accept": "application/json",
+                        "Authorization": "Bearer " + this.authStore.user.token  // передача токена в заголовке
+                    }
+                })
                     .then(r => {
                         if (!r.ok) {
                             throw new Error('Error occurred!')
@@ -59,7 +66,7 @@
                     .then(json => {
                         this.quiz = json;
                         this.loading = false;
-                        this.question = json.items[0];
+                        this.question = json?.items[0];
                         return;
                     });
             },
