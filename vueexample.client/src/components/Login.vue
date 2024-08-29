@@ -1,5 +1,9 @@
 <script setup>
-import { Form, Field } from 'vee-validate';
+import { Form, Field, ErrorMessage } from 'vee-validate';
+
+import { useField } from 'vee-validate';
+
+const { errorMessage, meta, value } = useField('fieldName');
 
 import { useAuthStore } from '../stores/auth-store.js';
 
@@ -10,6 +14,20 @@ function onSubmit(values, { setErrors }) {
     return authStore.login(username, password)
         .catch(error => setErrors({ apiError: error }));
 }
+
+function validateName(value) {
+    // if the field is empty
+    if (!value) {
+        return 'This field is required';
+    }
+
+    if (value.length < 5){
+        return 'to short';
+    }
+    // All is good
+    return true;
+}
+
 </script>
 
 <template>
@@ -41,7 +59,15 @@ function onSubmit(values, { setErrors }) {
         <Form @submit="onSubmit">
             <div class="form-group">
                 <label>Username</label>
-                <Field name="username" type="text" class="form-control" />
+                <!--<Field name="username" type="text" class="form-control" :rules="validateName" />
+    <ErrorMessage class="warning" name="username" />
+    <span>{{ errorMessage }}</span>-->
+                <Field name="username" :rules="validateName" v-slot="{ field, errors, errorMessage }">
+                    <input v-bind="field" type="text" class="form-control"/>
+
+                    <span>{{ errorMessage }}</span>
+                </Field>
+
             </div>
             <div class="form-group">
                 <label>Password</label>

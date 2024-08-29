@@ -24,4 +24,9 @@ router.beforeEach(async (to) => {
         auth.returnUrl = to.fullPath;
         return '/login';
     }
+
+    if (auth.user && to.path === '/login') {
+        auth.returnUrl = to.fullPath;
+        return '/';
+    }
 });
