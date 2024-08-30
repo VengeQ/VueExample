@@ -11,11 +11,10 @@ namespace Domain.IntegrationTests
     [SingleThreaded, NonParallelizable]
     public class QuizesControllerTests : QuizesTestFactory<Startup>
     {
-        ILogger<QuizesController> _logger = new DummyLogger<QuizesController>();
-        readonly JsonSerializerOptions _jsonSerializerOptions = new(JsonSerializerDefaults.Web);
+        private ILogger<QuizesController> _logger = new DummyLogger<QuizesController>();
+        private readonly JsonSerializerOptions _jsonSerializerOptions = new(JsonSerializerDefaults.Web);
         private static readonly string _connectionString = 
             $"Host=localhost;Port=5455;Database=quizes_{Guid.NewGuid()};Username=postgres;Password=postgresPW";
-        //private token 
 
         public QuizesControllerTests() : base(_connectionString)
         {

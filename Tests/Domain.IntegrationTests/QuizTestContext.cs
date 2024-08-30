@@ -18,10 +18,7 @@ namespace Domain.IntegrationTests
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql(
-                 //@"Host=host.docker.internal;Port=5455;Database=quizes;Username=postgres;Password=postgresPW")
-                 //@"Host=localhost;Port=5455;Database=quizes;Username=postgres;Password=postgresPW")
-                 _connectionString)
+            optionsBuilder.UseNpgsql(_connectionString)
                 .LogTo(Console.WriteLine, LogLevel.Information)
                 .EnableSensitiveDataLogging();
         }

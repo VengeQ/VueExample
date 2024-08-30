@@ -1,0 +1,12 @@
+@QuizesApp.Server_HostAddress = http://localhost:5142
+
+GET {{QuizesApp.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+# POST {{QuizesApp.Server_HostAddress}}/api/authenticate/
+# Accept: application/json
+
+# GET {{QuizesApp.Server_HostAddress}}/api/quizes/1
+# Accept: application/json
+
+###

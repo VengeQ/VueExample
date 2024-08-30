@@ -13,14 +13,20 @@ export const useAuthStore = defineStore({
     actions: {
         async login(username, password) {
 
-            let user = await fetch('api/authenticate', {
+            let response = await fetch('api/authenticate', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json;charset=utf-8',
                     'Authorization': `Bearer_test`
                 },
                 body: JSON.stringify({ username, password })
-            }).then(r => r.json());
+            });
+
+            if (response.status === 403 || response.status === 401) {
+                throw Error(await response.text());
+            }
+
+            let user = await response.json();
 
             // update pinia state
             this.user = user;

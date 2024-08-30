@@ -18,7 +18,7 @@ namespace QuizesApp.Server.Controllers
             _quizService = quizService;
         }
 
-        [HttpGet("{id:int}", Name = "GetQuizes")]
+        [HttpGet("{id:int}", Name = "GetQuiz")]
         [Authorize]
         public async Task<IActionResult> GetQuiz(int id)
         {
@@ -35,7 +35,6 @@ namespace QuizesApp.Server.Controllers
             }
 
             return Ok(quiz);
-            //return Task.FromResult<IEnumerable<Quiz>>(null);
         }
     }
 }

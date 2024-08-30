@@ -27,7 +27,7 @@ const validatePassword = value => !!value ? true : 'This field is required';
             Password: test
         </div>
         <h2>Login</h2>
-        <Form @submit="onSubmit">
+        <Form @submit="onSubmit" v-slot="{errors}">
             <div class="form-group">
                 <label>Username</label>
                 <Field name="username" :rules="validateName" v-slot="{ field, errors, errorMessage }">
@@ -48,6 +48,7 @@ const validatePassword = value => !!value ? true : 'This field is required';
                     Login
                 </button>
             </div>
+            <div v-if="errors.apiError" class="alert alert-danger mt-3 mb-0">{{errors.apiError}}</div>
         </Form>
     </div>
 </template>

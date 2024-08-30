@@ -10,6 +10,9 @@ using System.Security.Claims;
 
 namespace Domain.IntegrationTests
 {
+    /// <summary>
+    /// Фабрика для развертывания интеграционных тестов для викторин
+    /// </summary>
     public class QuizesTestFactory<TStartup> : WebApplicationFactory<TStartup> where TStartup : class
     {
         protected WebApplicationFactory<Startup> Factory { get; private set; }
