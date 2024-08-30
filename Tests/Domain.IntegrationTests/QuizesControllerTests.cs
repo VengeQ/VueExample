@@ -3,8 +3,8 @@ using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
-using VueExample.Server;
-using VueExample.Server.Controllers;
+using QuizesApp.Server;
+using QuizesApp.Server.Controllers;
 
 namespace Domain.IntegrationTests
 {
@@ -12,9 +12,10 @@ namespace Domain.IntegrationTests
     public class QuizesControllerTests : QuizesTestFactory<Startup>
     {
         ILogger<QuizesController> _logger = new DummyLogger<QuizesController>();
-        JsonSerializerOptions _jsonSerializerOptions = new(JsonSerializerDefaults.Web);
+        readonly JsonSerializerOptions _jsonSerializerOptions = new(JsonSerializerDefaults.Web);
         private static readonly string _connectionString = 
             $"Host=localhost;Port=5455;Database=quizes_{Guid.NewGuid()};Username=postgres;Password=postgresPW";
+        //private token 
 
         public QuizesControllerTests() : base(_connectionString)
         {

@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using VueExample.Server;
+using QuizesApp.Server;
+using Security;
+using System.Security.Claims;
 
 namespace Domain.IntegrationTests
 {
@@ -15,10 +17,17 @@ namespace Domain.IntegrationTests
         protected HttpClient HttpClient { get; set; } = null!;
 
         private readonly string _connectionString = null!;
+        [ThreadStatic] private static string? t_token;
 
         public QuizesTestFactory(string connectionString)
         {
             _connectionString = connectionString;
+        }
+
+        protected override void ConfigureClient(HttpClient client)
+        {
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + t_token);
+            base.ConfigureClient(client);
         }
 
         [OneTimeSetUp]
@@ -29,6 +38,10 @@ namespace Domain.IntegrationTests
             var quizContext = _scope.ServiceProvider.GetRequiredService<QuizTestContext>();
             quizContext.Database.EnsureDeleted();
             quizContext.Database.EnsureCreated();
+
+            var tokenService = _scope.ServiceProvider.GetRequiredService<ITokenService>();
+            var testClaims = new Dictionary<string, object>() { [ClaimTypes.Name] = "Testuser" };
+            t_token = tokenService.GenerateToken(testClaims);
         }
 
         [OneTimeTearDown]

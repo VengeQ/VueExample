@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace VueExample.Server.Controllers
+namespace QuizesApp.Server.Controllers
 {
     [ApiController]
     [Route("[controller]")]

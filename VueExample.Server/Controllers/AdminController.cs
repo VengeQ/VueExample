@@ -1,7 +1,7 @@
 ﻿using Domain.Services.Quizes;
 using Microsoft.AspNetCore.Mvc;
 
-namespace VueExample.Server.Controllers
+namespace QuizesApp.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

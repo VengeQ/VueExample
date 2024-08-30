@@ -1,4 +1,4 @@
-namespace VueExample.Server
+namespace QuizesApp.Server
 {
     public class WeatherForecast
     {

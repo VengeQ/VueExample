@@ -2,9 +2,10 @@
 using Domain.Services.Quizes;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Security;
 using System.Text;
 
-namespace VueExample.Server;
+namespace QuizesApp.Server;
 
 public class Startup
 {
@@ -20,41 +21,18 @@ public class Startup
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
 
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(o =>
-        {
-            o.TokenValidationParameters = new TokenValidationParameters
-            {
-                ValidIssuer = "issuer",
-                ValidAudience = "audience",
-                IssuerSigningKey = new SymmetricSecurityKey
-                (Encoding.UTF8.GetBytes("VERY_SECRET_BEATIFUL_KEY_ISJAFWJAFJ")),
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidateLifetime = true,
-                ValidateIssuerSigningKey = true
-            };
-        });
-        services.AddAuthorization();            // добавление сервисов авторизации
+        ConfigureSecurityContext(services);
 
-        services.AddTransient<IQuizService, QuizService>();
-        services.AddTransient<IQuizAdminService, QuizAdminService>();
-        services.AddTransient<IQuizRepository, QuizRepository>();
+        services.AddTransient<ITokenService, TokenService>();
 
-        //services.AddOptions<QuizContextOptions>()
-        //    .Bind(Configuration.GetSection("QuizContextOptions"));
+        services.AddScoped<IQuizService, QuizService>();
+        services.AddScoped<IQuizAdminService, QuizAdminService>();
+        services.AddScoped<IQuizRepository, QuizRepository>();
 
+        var quizContextSection = Configuration.GetSection("QuizContextOptions") ?? throw new ApplicationConfigurationException("Invalid database context options");
+        services.Configure<QuizContextOptions>(quizContextSection);
 
-        services.Configure<QuizContextOptions>(
-            Configuration.GetSection("QuizContextOptions")
-        );
-
-        //IOptions<QuizContextOptions> contextOptions = Options.Create(new QuizContextOptions
-        //{
-        //    ConnectionString = @"Host=localhost;Port=5455;Database=quizes;Username=postgres;Password=postgresPW",
-        //});
-        //services.AddSingleton(contextOptions);
-
-        services.AddTransient<QuizContext>();
+        services.AddScoped<QuizContext>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -85,5 +63,25 @@ public class Startup
             app.MapFallbackToFile("/index.html");
         });
     }
-}
 
+    private void ConfigureSecurityContext(IServiceCollection services)
+    {
+        var section = Configuration.GetSection("TokenOptions");
+        var tokenOptions = section.Get<TokenOptions>() ?? throw new ApplicationConfigurationException("Invalid token options");
+        services.Configure<TokenOptions>(section);
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(o =>
+        {
+            o.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidIssuer = tokenOptions.Issuer,
+                ValidAudience = tokenOptions.Audience,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenOptions.Key)),
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true
+            };
+        });
+        services.AddAuthorization();
+    }
+}

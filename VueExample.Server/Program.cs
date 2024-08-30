@@ -1,7 +1,7 @@
 
 using Domain.Services.Quizes;
 
-namespace VueExample.Server
+namespace QuizesApp.Server
 {
     public class Program
     {
