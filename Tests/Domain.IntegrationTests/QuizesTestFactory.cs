@@ -1,4 +1,4 @@
-﻿using Domain.Repository.Quizes;
+﻿using Domain.Repository;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -38,7 +38,7 @@ namespace Domain.IntegrationTests
         {
             Factory = new QuizesTestFactory<Startup>(_connectionString);
             using var _scope = Factory.Services.CreateScope();
-            var quizContext = _scope.ServiceProvider.GetRequiredService<QuizTestContext>();
+            var quizContext = _scope.ServiceProvider.GetRequiredService<TestApplicationContext>();
             quizContext.Database.EnsureDeleted();
             quizContext.Database.EnsureCreated();
 
@@ -51,7 +51,7 @@ namespace Domain.IntegrationTests
         public void OneTimeTearDownBase()
         {
             using var _scope = Factory.Services.CreateScope();
-            var quizContext = _scope.ServiceProvider.GetRequiredService<QuizTestContext>();
+            var quizContext = _scope.ServiceProvider.GetRequiredService<TestApplicationContext>();
             quizContext.Database.EnsureDeleted();
             quizContext.Dispose();
             Factory?.Dispose();
@@ -73,9 +73,9 @@ namespace Domain.IntegrationTests
         {
             builder.ConfigureTestServices(services =>
             {
-                services.AddTransient<QuizTestContext>();
+                services.AddTransient<TestApplicationContext>();
 
-                IOptions<QuizContextOptions> contextOptions = Options.Create(new QuizContextOptions
+                IOptions<ApplicationContextOptions> contextOptions = Options.Create(new ApplicationContextOptions
                 {
                     ConnectionString = _connectionString
                 });

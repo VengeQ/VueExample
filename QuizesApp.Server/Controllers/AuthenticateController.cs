@@ -1,22 +1,29 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Security;
 using System.Security.Claims;
+using Utils;
 
 namespace QuizesApp.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthenticateController(ITokenService tokenService) : ControllerBase
+    public class AuthenticateController(ITokenService tokenService, IUsersService userService) : ControllerBase
     {
         [HttpPost]
-        public IActionResult Authorize(UserCredentials user)
+        public async Task<IActionResult> Authorize(UserCredentials credentials)
         {
-            var claims = new Dictionary<string, object> { [ClaimTypes.Name] = user.Username };
-            var token = tokenService.GenerateToken(claims);
+            try
+            {
+                var user = await userService.Autorize(credentials.Username, credentials.Password);
 
-            return Ok(new { Id = user.Username, token });
-
-            //return Unauthorized("Something wrong");
+                var claims = new Dictionary<string, object> { [ClaimTypes.Name] = credentials.Username };
+                var token = tokenService.GenerateToken(claims);
+                return Ok(new { Id = credentials.Username, token });
+            }
+            catch (AutorizationException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
         }
 
         public class UserCredentials

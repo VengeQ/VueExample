@@ -1,6 +1,6 @@
-﻿namespace Domain.Repository.Quizes
+﻿namespace Domain.Repository
 {
-    public class QuizContextOptions
+    public class ApplicationContextOptions
     {
         public string ConnectionString { get; init; } = null!;
     }

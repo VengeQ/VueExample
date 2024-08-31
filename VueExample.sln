@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Security", "Security\Securi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utils", "Utils\Utils.csproj", "{17BC0F70-D654-4FD1-8C87-F37A0FABC73D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{BC2A418A-FDAE-4FA5-A8ED-4CBEE7510A0B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -68,6 +70,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5C976832-EBA9-4AA1-8CEE-92CA8077866B} = {BC2A418A-FDAE-4FA5-A8ED-4CBEE7510A0B}
+		{28226627-2561-4F74-8753-98B152C73152} = {BC2A418A-FDAE-4FA5-A8ED-4CBEE7510A0B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CB9F5BDF-08DA-4693-BC2B-45EB7F5A25FE}

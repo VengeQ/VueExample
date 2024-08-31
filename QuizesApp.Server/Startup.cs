@@ -1,4 +1,6 @@
-﻿using Domain.Repository.Quizes;
+﻿using Domain.Repository;
+using Domain.Repository.Quizes;
+using Domain.Repository.Security;
 using Domain.Services.Quizes;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -29,10 +31,11 @@ public class Startup
         services.AddScoped<IQuizAdminService, QuizAdminService>();
         services.AddScoped<IQuizRepository, QuizRepository>();
 
-        var quizContextSection = Configuration.GetSection("QuizContextOptions") ?? throw new ApplicationConfigurationException("Invalid database context options");
-        services.Configure<QuizContextOptions>(quizContextSection);
+        var applicationContextSection = Configuration.GetSection("ApplicationContextOptions") 
+            ?? throw new ApplicationConfigurationException("Invalid database context options");
+        services.Configure<ApplicationContextOptions>(applicationContextSection);
 
-        services.AddScoped<QuizContext>();
+        services.AddScoped<ApplicationContext>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -83,5 +86,8 @@ public class Startup
             };
         });
         services.AddAuthorization();
+
+        services.AddScoped<IUsersRepository, UsersRepository>();
+        services.AddScoped<IUsersService, UsersService>();
     }
 }

@@ -1,30 +1,60 @@
 ﻿using Domain.Repository.Quizes;
+using Domain.Repository.Security;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Domain.IntegrationTests
+namespace Domain.Repository
 {
-    internal class QuizTestContext : QuizContext
+    public class ApplicationContext : DbContext
     {
-        public QuizTestContext(IOptions<QuizContextOptions> contextOptions) : base(contextOptions)
+        public ApplicationContext(IOptions<ApplicationContextOptions> contextOptions)
         {
+            _connectionString = contextOptions.Value.ConnectionString;
         }
+
+        protected readonly string _connectionString;
+
+        public DbSet<QuizDto> Quizes { get; set; }
+
+        public DbSet<QuizItemDto> QuizItems { get; set; }
+
+        public DbSet<QuizStateDto> QuizStates { get; set; }
+
+        public DbSet<GivenAnswerDto> GivenAnswers { get; set; }
+
+        public DbSet<AnswerOptionDto> AnswerOptions { get; set; }
+
+        public DbSet<UserDto> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql(_connectionString)
-                .LogTo(Console.WriteLine, LogLevel.Information)
-                .EnableSensitiveDataLogging();
+            optionsBuilder.UseNpgsql(_connectionString);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<QuizItemDto>(
+                entity =>
+                {
+                    entity.HasOne(d => d.QuizDto)
+                        .WithMany(p => p.QuizItemDtos)
+                        .HasForeignKey("QuizDtoId");
+                }
+            );
+
+            modelBuilder.Entity<AnswerOptionDto>(
+                entity =>
+                {
+                    entity.HasOne(a => a.QuizItemDto)
+                        .WithMany(p => p.AnswerOptions)
+                        .HasForeignKey("QuizItemDtoId");
+                }
+            );
+
+            modelBuilder.Entity<UserDto>(
+                entity => entity.HasIndex(u => u.Name).IsUnique()
+            );
+
             modelBuilder.Entity<QuizDto>().HasData(new QuizDto { Id = 1, Title = "Первая викторина" });
             modelBuilder.Entity<QuizDto>().HasData(new QuizDto { Id = 2, Title = "Вторая" });
 
@@ -62,6 +92,26 @@ namespace Domain.IntegrationTests
 
             modelBuilder.Entity<AnswerOptionDto>().HasData(answerOptions);
             modelBuilder.Entity<AnswerOptionDto>().HasData(answerOptions_2);
+
+            modelBuilder.Entity<UserDto>().HasData(new UserDto { Id = 1, Name = "test", Email = "test@test.test", Password ="test", Role = "test" });
+        }
+
+        public string GetVersion()
+        {
+            var t = Database.SqlQueryRaw<string>($"SELECT VERSION()").AsEnumerable().First();
+            return t.ToString();
+        }
+
+        public async Task<QuizDto?> GetQuiz(int id)
+        {
+            var quiz = await Quizes.FirstOrDefaultAsync(q => q.Id == id);
+
+            if (quiz == null)
+            {
+                return null;
+            }
+
+            return await Quizes.Include(q => q.QuizItemDtos).ThenInclude(a => a.AnswerOptions).FirstAsync(q => q.Id == id);
         }
     }
 }
