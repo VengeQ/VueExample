@@ -1,5 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Domain.Repository.Security;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Utils;
 
 namespace Domain.Repository.Quizes
 {
@@ -22,6 +24,8 @@ namespace Domain.Repository.Quizes
 
         public DbSet<AnswerOptionDto> AnswerOptions { get; set; }
 
+        public DbSet<UserDto> Users { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseNpgsql(_connectionString);
@@ -35,7 +39,8 @@ namespace Domain.Repository.Quizes
                     entity.HasOne(d => d.QuizDto)
                         .WithMany(p => p.QuizItemDtos)
                         .HasForeignKey("QuizDtoId");
-                });
+                }
+            );
 
             modelBuilder.Entity<AnswerOptionDto>(
                 entity =>
@@ -43,7 +48,12 @@ namespace Domain.Repository.Quizes
                     entity.HasOne(a => a.QuizItemDto)
                         .WithMany(p => p.AnswerOptions)
                         .HasForeignKey("QuizItemDtoId");
-                });
+                }
+            );
+
+            modelBuilder.Entity<UserDto>(
+                entity => entity.HasIndex(u => u.Name).IsUnique()
+            );
         }
 
         public string GetVersion()
@@ -62,6 +72,22 @@ namespace Domain.Repository.Quizes
             }
 
             return await Quizes.Include(q => q.QuizItemDtos).ThenInclude(a => a.AnswerOptions).FirstAsync(q => q.Id == id);
+        }
+
+        public async Task<UserDto?> Autorize(string name, string password)
+        {
+            var user = await Users.FirstOrDefaultAsync(u => u.Name == name);
+            if (user == null)
+            {
+                return null;
+            }
+
+            if (user.Password != password)
+            {
+                throw new AutorizationException();
+            }
+
+            return user;
         }
     }
 }
