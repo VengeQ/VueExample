@@ -27,7 +27,7 @@ namespace QuizesApp.Server.Controllers
                 return BadRequest();
             }
 
-            var quiz = await _quizService.GetQuiz(id);
+            var quiz = await _quizService.Get(id);
 
             if (quiz == null)
             {

@@ -9,7 +9,7 @@ namespace Domain.Services.Quizes
 
         public QuizService(IQuizRepository quizRepository) { _quizRepository = quizRepository; }
 
-        public async Task<Quiz?> GetQuiz(int id)
+        public async Task<Quiz?> Get(int id)
         {
             return await _quizRepository.Get(id);
         }

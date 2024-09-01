@@ -27,6 +27,14 @@ router.beforeEach(async (to) => {
         return '/login';
     }
 
+    if (authRequired && auth.user) {
+        let jwtPayload = JSON.parse(window.atob(auth.user.token.split('.')[1]))
+        let isExpired = Date.now() >= jwtPayload.exp * 1000;
+        if (isExpired) {
+            auth.logout();
+        }
+    }
+
     if (auth.user && to.path === '/login') {
         auth.returnUrl = to.fullPath;
         return '/';

@@ -1,5 +1,6 @@
 ﻿using Domain.Repository;
 using Domain.Repository.Quizes;
+using Domain.Repository.Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -58,6 +59,8 @@ namespace Domain.IntegrationTests
 
             modelBuilder.Entity<AnswerOptionDto>().HasData(answerOptions);
             modelBuilder.Entity<AnswerOptionDto>().HasData(answerOptions_2);
+
+            modelBuilder.Entity<UserDto>().HasData(new UserDto { Id = 1, Name = "test", Email = "test@test.test", Password = "test", Role = "test" });
         }
     }
 }

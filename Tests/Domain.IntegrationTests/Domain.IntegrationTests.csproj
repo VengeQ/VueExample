@@ -24,6 +24,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Domain.Services\Domain.Services.csproj" />
     <ProjectReference Include="..\..\QuizesApp.Server\QuizesApp.Server.csproj" />
+    <ProjectReference Include="..\..\TestUtils\TestUtils.csproj" />
   </ItemGroup>
 
   <ItemGroup>

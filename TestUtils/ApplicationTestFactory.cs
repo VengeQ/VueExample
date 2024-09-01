@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using NUnit.Framework;
 using QuizesApp.Server;
 using Security;
 using System.Security.Claims;
@@ -13,16 +14,16 @@ namespace Domain.IntegrationTests
     /// <summary>
     /// Фабрика для развертывания интеграционных тестов для викторин
     /// </summary>
-    public class QuizesTestFactory<TStartup> : WebApplicationFactory<TStartup> where TStartup : class
+    public class ApplicationTestFactory<TStartup> : WebApplicationFactory<TStartup> where TStartup : class
     {
-        protected WebApplicationFactory<Startup> Factory { get; private set; }
+        protected WebApplicationFactory<Startup> Factory { get; private set; } = null!;
 
         protected HttpClient HttpClient { get; set; } = null!;
 
         private readonly string _connectionString = null!;
         [ThreadStatic] private static string? t_token;
 
-        public QuizesTestFactory(string connectionString)
+        public ApplicationTestFactory(string connectionString)
         {
             _connectionString = connectionString;
         }
@@ -36,11 +37,11 @@ namespace Domain.IntegrationTests
         [OneTimeSetUp]
         public void OneTimeSetUpBase()
         {
-            Factory = new QuizesTestFactory<Startup>(_connectionString);
+            Factory = new ApplicationTestFactory<Startup>(_connectionString);
             using var _scope = Factory.Services.CreateScope();
-            var quizContext = _scope.ServiceProvider.GetRequiredService<TestApplicationContext>();
-            quizContext.Database.EnsureDeleted();
-            quizContext.Database.EnsureCreated();
+            var context = _scope.ServiceProvider.GetRequiredService<TestApplicationContext>();
+            context.Database.EnsureDeleted();
+            context.Database.EnsureCreated();
 
             var tokenService = _scope.ServiceProvider.GetRequiredService<ITokenService>();
             var testClaims = new Dictionary<string, object>() { [ClaimTypes.Name] = "Testuser" };
@@ -51,9 +52,9 @@ namespace Domain.IntegrationTests
         public void OneTimeTearDownBase()
         {
             using var _scope = Factory.Services.CreateScope();
-            var quizContext = _scope.ServiceProvider.GetRequiredService<TestApplicationContext>();
-            quizContext.Database.EnsureDeleted();
-            quizContext.Dispose();
+            var context = _scope.ServiceProvider.GetRequiredService<TestApplicationContext>();
+            context.Database.EnsureDeleted();
+            context.Dispose();
             Factory?.Dispose();
         }
 

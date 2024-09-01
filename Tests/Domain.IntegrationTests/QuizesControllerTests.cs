@@ -9,7 +9,7 @@ using QuizesApp.Server.Controllers;
 namespace Domain.IntegrationTests
 {
     [SingleThreaded, NonParallelizable]
-    public class QuizesControllerTests : QuizesTestFactory<Startup>
+    public class QuizesControllerTests : ApplicationTestFactory<Startup>
     {
         private ILogger<QuizesController> _logger = new DummyLogger<QuizesController>();
         private readonly JsonSerializerOptions _jsonSerializerOptions = new(JsonSerializerDefaults.Web);
