@@ -36,5 +36,14 @@ namespace QuizesApp.Server.Controllers
 
             return Ok(quiz);
         }
+
+        [HttpGet(Name = "Quizes")]
+        [Authorize]
+        public async Task<IActionResult> GetQuizes()
+        {
+            var quizes = await _quizService.Get();
+
+            return Ok(quizes);
+        }
     }
 }

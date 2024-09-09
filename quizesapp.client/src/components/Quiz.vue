@@ -1,10 +1,17 @@
 <template>
-    <div class="quizes-component">
-        <h1>Р’РёРєС‚РѕСЂРёРЅС‹</h1>
-        <div v-for="quiz of quizes">
-            <router-link :to="{name: 'quiz', params: {id:quiz.id}}">{{quiz.title}}</router-link>
+    <div class="quiz-component">
+        <div v-if="quiz" class="card" style="width: 18rem;">
+            <div class="card-header">
+                {{question.question}}
+            </div>
+
+            <ul v-for="(answer, answerId) of question.answerOptions" class="list-group list-group-flush">
+                <li @click="doJob(answerId)" class="list-group-item">{{answerId}} {{answer}}</li>
+            </ul>
         </div>
-        <!--<router-view></router-view>-->
+        <div v-else class="content">
+            notwowes
+        </div>
     </div>
 </template>
 
@@ -15,8 +22,10 @@
     export default defineComponent({
         data() {
             return {
+                quizId: this.$route.params.id,
                 loading: false,
-                quizes: null,
+                quiz: null,
+                question: null,
                 authStore: useAuthStore()
             };
         },
@@ -34,10 +43,10 @@
                 this.quiz = null;
                 this.loading = true;
 
-                fetch('api/quizes', {
+                fetch('/api/quizes/' + this.quizId, {
                     headers: {
                         "Accept": "application/json",
-                        "Authorization": "Bearer " + this.authStore.user.token  // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+                        "Authorization": "Bearer " + this.authStore.user.token  // передача токена в заголовке
                     }
                 })
                     .then(r => {
@@ -49,8 +58,9 @@
                         console.log(err)
                     })
                     .then(json => {
-                        this.quizes = json;
+                        this.quiz = json;
                         this.loading = false;
+                        this.question = json?.items[0];
                         return;
                     });
             },

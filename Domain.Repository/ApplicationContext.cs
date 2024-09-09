@@ -113,5 +113,11 @@ namespace Domain.Repository
 
             return await Quizes.Include(q => q.QuizItemDtos).ThenInclude(a => a.AnswerOptions).FirstAsync(q => q.Id == id);
         }
+
+        public async Task<QuizDto[]> Get()
+        {
+            var result = await Quizes.Include(q => q.QuizItemDtos).ThenInclude(a => a.AnswerOptions).ToArrayAsync();//.AsAsyncEnumerable();
+            return result;
+        }
     }
 }

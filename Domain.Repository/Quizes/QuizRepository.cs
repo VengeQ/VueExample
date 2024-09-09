@@ -15,6 +15,12 @@ namespace Domain.Repository.Quizes
             return quizDto?.ToQuiz();
         }
 
+        public async Task<IEnumerable<Quiz>> Get()
+        {
+            var quizDtos = await _context.Get();
+            return quizDtos.Select(q => q.ToQuiz());
+        }
+
         public Task<string> GetVersion()
         {
             return Task.FromResult(_context.GetVersion());

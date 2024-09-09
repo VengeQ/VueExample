@@ -15,6 +15,12 @@ namespace Domain.Services.Quizes
         public Task<Quiz?> Get(int id);
 
         /// <summary>
+        /// Получение доступных викторин
+        /// </summary>
+        /// <returns>Доаступные Викторины</returns>
+        public Task<IEnumerable<Quiz>> Get();
+
+        /// <summary>
         /// Получить версию БД
         /// </summary>
         /// <returns>Версия БД</returns>

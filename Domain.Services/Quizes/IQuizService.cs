@@ -13,5 +13,11 @@ namespace Domain.Services.Quizes
         /// <param name="id">Идентификатор викторины</param>
         /// <returns>Викторина</returns>
         public Task<Quiz?> Get(int id);
+
+        /// <summary>
+        /// Получить доступные викторины
+        /// </summary>
+        /// <returns>Викторина</returns>
+        public Task<IEnumerable<Quiz>> Get();
     }
 }

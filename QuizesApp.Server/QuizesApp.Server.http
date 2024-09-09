@@ -6,7 +6,7 @@ Accept: application/json
 # POST {{QuizesApp.Server_HostAddress}}/api/authenticate/
 # Accept: application/json
 
-# GET {{QuizesApp.Server_HostAddress}}/api/quizes/1
+# GET {{QuizesApp.Server_HostAddress}}/api/quizes
 # Accept: application/json
 
 ###

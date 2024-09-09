@@ -13,5 +13,10 @@ namespace Domain.Services.Quizes
         {
             return await _quizRepository.Get(id);
         }
+
+        public async Task<IEnumerable<Quiz>> Get()
+        {
+            return await _quizRepository.Get();
+        }
     }
 }
