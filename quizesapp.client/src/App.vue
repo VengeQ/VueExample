@@ -1,5 +1,4 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
 import { RouterLink, RouterView } from 'vue-router';
 
 import { useAuthStore } from '@/stores/auth-store.js';    
@@ -25,6 +24,7 @@ const authStore = useAuthStore();
         <nav v-show="authStore.user" class="navbar navbar-expand navbar-dark bg-dark">
             <div class="navbar-nav">
                 <RouterLink to="/" class="nav-item nav-link">Home</RouterLink>
+                <RouterLink to="/Quizes" class="nav-item nav-link">Quizes</RouterLink>
                 <a @click="authStore.logout()" class="nav-item nav-link">Logout</a>
             </div>
         </nav>

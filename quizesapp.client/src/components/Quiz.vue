@@ -1,16 +1,23 @@
-<template>
+﻿<template>
     <div class="quiz-component">
-        <div v-if="quiz" class="card" style="width: 18rem;">
-            <div class="card-header">
-                {{question.question}}
+        <div v-if="loading" class="content">
+            notwowes
+        </div>
+        <div v-else class="card" style="width: 18rem;">
+            <div v-if="isStarted">
+                <div class="card-header">
+                    {{currentQuestion.question}}
+                </div>
+
+                <ul v-for="(answer, answerId) of currentQuestion.answerOptions" class="list-group list-group-flush">
+                    <li @click="doJob(answerId)" class="list-group-item">{{answerId}} {{answer}}</li>
+                </ul>
+            </div>
+            <div v-else>
+                Данная викторина посвящена: {{quiz.title}}
+                <button @click="startQuiz">Начать!</button>
             </div>
 
-            <ul v-for="(answer, answerId) of question.answerOptions" class="list-group list-group-flush">
-                <li @click="doJob(answerId)" class="list-group-item">{{answerId}} {{answer}}</li>
-            </ul>
-        </div>
-        <div v-else class="content">
-            notwowes
         </div>
     </div>
 </template>
@@ -23,10 +30,13 @@
         data() {
             return {
                 quizId: this.$route.params.id,
-                loading: false,
+                loading: true,
                 quiz: null,
-                question: null,
-                authStore: useAuthStore()
+                questions: [],
+                currentQuestionIndex: 0,
+                authStore: useAuthStore(),
+                length: 0,
+                isStarted: false
             };
         },
         created() {
@@ -46,7 +56,7 @@
                 fetch('/api/quizes/' + this.quizId, {
                     headers: {
                         "Accept": "application/json",
-                        "Authorization": "Bearer " + this.authStore.user.token  // �������� ������ � ���������
+                        "Authorization": "Bearer " + this.authStore.user.token  // передача токена в заголовке
                     }
                 })
                     .then(r => {
@@ -60,14 +70,23 @@
                     .then(json => {
                         this.quiz = json;
                         this.loading = false;
-                        this.question = json?.items[0];
+                        this.questions = json?.items;
+
                         return;
                     });
             },
             doJob(answerId) {
                 alert(answerId);
-            }
+            },
+            startQuiz() {
+                this.isStarted = true;
+            },
         },
+        computed: {
+            currentQuestion() {
+                return this.questions[this.currentQuestionIndex];
+            }
+        }
     });
 </script>
 
